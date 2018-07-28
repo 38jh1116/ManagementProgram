@@ -35,9 +35,10 @@ public class MenuViewer extends MyPrinter {
         print("\n######## Menu ########\n\n");
         print(" 1. 학생 관리 \n");
         print(" 2. 교수 관리 \n");
-        print(" 3. 강의 관리 \n");
-        print(" 4. 수강 관리 \n");
-        print(" 5. 성적 관리 \n");
+        print(" 3. 과목 관리 \n");
+        print(" 4. 강의 관리 \n");
+        print(" 5. 수강 관리 \n");
+        print(" 6. 성적 관리 \n");
         print(" -------------\n");
         print(" 0. 로그아웃 \n\n");
         print(" >> ");

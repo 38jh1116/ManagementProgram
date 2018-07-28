@@ -6,18 +6,18 @@ import main.model.Course;
 import java.util.List;
 
 public class CourseManager {
-    public CourseDAO courseDAO;
+    private CourseDAO courseDAO;
 
     public CourseManager(){
         courseDAO = new CourseDAO();
     }
 
-    public boolean dupleCheck(Course course){
+    private boolean dupleCheck(Course course){
         return courseDAO.checkDupleCourse(course);
     }
 
 
-    public boolean validationCheck(Course course){
+    private boolean validationCheck(Course course){
 
         boolean isValid = true;
         if("".equals(course.getCourseName())
@@ -69,23 +69,23 @@ public class CourseManager {
         return courseDAO.inquireCourseInfo(targetCourseNum);
     }
 
-    public List<Course> inquireCoursesBySubjectNum(String subjectNum) {
-        return courseDAO.inquireCoursesBySubjectNum(subjectNum);
+    public List<Course> inquireCoursesInfoBySubjectNum(String subjectNum) {
+        return courseDAO.inquireCoursesInfoBySubjectNum(subjectNum);
 
     }
-    public List<Course> inquireCoursesByCourseName(String targetSubjectName){
-        return courseDAO.inquireCoursesByCourseName(targetSubjectName);
+    public List<Course> inquireCoursesInfoByCourseName(String targetSubjectName){
+        return courseDAO.inquireCoursesInfoByCourseName(targetSubjectName);
     }
-    public List<Course> inquireCoursesByProfessorName(String targetCourseProfessorName){
-        return courseDAO.inquireCoursesByProfessorName(targetCourseProfessorName);
-    }
-
-    public List<Course> sortCoursesBySubjectNum() {
-        return courseDAO.sortCoursesBySubjectNum();
+    public List<Course> inquireCoursesInfoByProfessorName(String targetCourseProfessorName){
+        return courseDAO.inquireCoursesInfoByProfessorName(targetCourseProfessorName);
     }
 
-    public List<Course> sortCoursesByCourseName() {
-        return courseDAO.sortCoursesByCourseName();
+    public List<Course> sortCoursesInfoBySubjectNum() {
+        return courseDAO.sortCoursesInfoBySubjectNum();
+    }
+
+    public List<Course> sortCoursesInfoByCourseName() {
+        return courseDAO.sortCoursesInfoByCourseName();
     }
 
     public List<Course> getAllCoursesInfo() {

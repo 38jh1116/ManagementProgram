@@ -1,5 +1,6 @@
 package main.dao;
 
+import main.FilePath;
 import main.manager.ProfessorManager;
 import main.model.Course;
 
@@ -10,11 +11,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CourseDAO {
-    private static final String COURSE_FILE_PATH = "/Users/limjeonghyun/Desktop/ManageProgram/info_files/courseInfo";
-    private static final String COURSE_NUM_FILE_PATH = "/Users/limjeonghyun/Desktop/ManageProgram/info_files/courseNumber";
 
-    File courseInfo = new File(COURSE_FILE_PATH);
-    File courseNumberInfo = new File(COURSE_NUM_FILE_PATH);
+
+    File courseInfo = new File(FilePath.COURSE_FILE_PATH);
+    File courseNumberInfo = new File(FilePath.COURSE_NUM_FILE_PATH);
 
     public List<Course> getAllCoursesInfo(){
         List<Course> courseList = new ArrayList<>();
@@ -41,7 +41,7 @@ public class CourseDAO {
     public void writeAllCourseInfo(List<Course> courses){
 
         try {
-            FileWriter fileWriter = new FileWriter(COURSE_FILE_PATH,false);
+            FileWriter fileWriter = new FileWriter(FilePath.COURSE_FILE_PATH,false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             for(Course course : courses){
                 bufferedWriter.write(course.toString());
@@ -101,7 +101,7 @@ public class CourseDAO {
     public boolean insertCourseInfo(Course newCourse){
         String newCourseInfo = newCourse.toString();
         try {
-            FileWriter fileWriter = new FileWriter(COURSE_FILE_PATH,true);
+            FileWriter fileWriter = new FileWriter(FilePath.COURSE_FILE_PATH,true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(newCourseInfo);
             bufferedWriter.close();
@@ -159,7 +159,7 @@ public class CourseDAO {
                 bufReader.close();
                 fileReader.close();
             }
-            FileWriter fileWriter = new FileWriter(COURSE_NUM_FILE_PATH,false);
+            FileWriter fileWriter = new FileWriter(FilePath.COURSE_NUM_FILE_PATH,false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(Integer.toString(nextCourseNum + 1));
             bufferedWriter.close();
@@ -196,7 +196,7 @@ public class CourseDAO {
         return selectedCourse;
     }
 
-    public List<Course> inquireCoursesBySubjectNum(String targetSubjectNum) {
+    public List<Course> inquireCoursesInfoBySubjectNum(String targetSubjectNum) {
         String currentCourseNum="";
         Course foundCourse;
 
@@ -226,7 +226,7 @@ public class CourseDAO {
     }
 
 
-    public List<Course> inquireCoursesByCourseName(String targetCourseName) {
+    public List<Course> inquireCoursesInfoByCourseName(String targetCourseName) {
         String currentCourseName="";
         Course foundCourse;
 
@@ -255,7 +255,7 @@ public class CourseDAO {
 
     }
 
-    public List<Course> inquireCoursesByProfessorName(String targetProfessorName) {
+    public List<Course> inquireCoursesInfoByProfessorName(String targetProfessorName) {
 
         List<Course> selectedCourseList = new ArrayList<>();
 
@@ -301,13 +301,13 @@ public class CourseDAO {
         }
     };
 
-    public List<Course> sortCoursesBySubjectNum() {
+    public List<Course> sortCoursesInfoBySubjectNum() {
         List<Course> courseList = getAllCoursesInfo();
         Collections.sort(courseList,numComparator);
         return courseList;
     }
 
-    public List<Course> sortCoursesByCourseName() {
+    public List<Course> sortCoursesInfoByCourseName() {
         List<Course> courseList = getAllCoursesInfo();
         Collections.sort(courseList,nameComparator);
         return courseList;

@@ -1,5 +1,6 @@
 package main.dao;
 
+import main.FilePath;
 import main.model.Registration;
 
 import java.io.*;
@@ -9,11 +10,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class RegistrationDAO {
-    private static final String REGISTRATION_FILE_PATH = "/Users/limjeonghyun/Desktop/ManageProgram/info_files/registrationInfo";
-    private static final String REGISTRATION_NUM_FILE_PATH = "/Users/limjeonghyun/Desktop/ManageProgram/info_files/registrationNumber";
 
-    File registrationInfo = new File(REGISTRATION_FILE_PATH);
-    File registrationNumberInfo = new File(REGISTRATION_NUM_FILE_PATH);
+
+    File registrationInfo = new File(FilePath.REGISTRATION_FILE_PATH);
+    File registrationNumberInfo = new File(FilePath.REGISTRATION_NUM_FILE_PATH);
 
     public List<Registration> getAllRegistrationsInfo() {
         List<Registration> registrationList = new ArrayList<>();
@@ -40,7 +40,7 @@ public class RegistrationDAO {
     public void writeAllRegistrationInfo(List<Registration> registrations) {
 
         try {
-            FileWriter fileWriter = new FileWriter(REGISTRATION_FILE_PATH, false);
+            FileWriter fileWriter = new FileWriter(FilePath.REGISTRATION_FILE_PATH, false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             for (Registration registration : registrations) {
                 bufferedWriter.write(registration.toString());
@@ -96,7 +96,7 @@ public class RegistrationDAO {
     public boolean insertRegistrationInfo(Registration newRegistration) {
         String newRegistrationInfo = newRegistration.toString();
         try {
-            FileWriter fileWriter = new FileWriter(REGISTRATION_FILE_PATH, true);
+            FileWriter fileWriter = new FileWriter(FilePath.REGISTRATION_FILE_PATH, true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(newRegistrationInfo);
             bufferedWriter.close();
@@ -149,7 +149,7 @@ public class RegistrationDAO {
                 bufReader.close();
                 fileReader.close();
             }
-            FileWriter fileWriter = new FileWriter(REGISTRATION_NUM_FILE_PATH, false);
+            FileWriter fileWriter = new FileWriter(FilePath.REGISTRATION_NUM_FILE_PATH, false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(Integer.toString(nextRegistrationNum + 1));
             bufferedWriter.close();

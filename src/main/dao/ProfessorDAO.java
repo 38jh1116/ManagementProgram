@@ -1,5 +1,6 @@
 package main.dao;
 
+import main.FilePath;
 import main.model.Professor;
 
 import java.io.*;
@@ -9,11 +10,9 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ProfessorDAO {
-    private static final String PROFESSOR_FILE_PATH = "/Users/limjeonghyun/Desktop/ManageProgram/info_files/professorInfo";
-    private static final String PROFESSOR_NUM_FILE_PATH = "/Users/limjeonghyun/Desktop/ManageProgram/info_files/professorNumber";
 
-    File professorInfo = new File(PROFESSOR_FILE_PATH);
-    File professorNumberInfo = new File(PROFESSOR_NUM_FILE_PATH);
+    File professorInfo = new File(FilePath.PROFESSOR_FILE_PATH);
+    File professorNumberInfo = new File(FilePath.PROFESSOR_NUM_FILE_PATH);
 
     public List<Professor> getAllProfessorInfo(){
         List<Professor> professorList = new ArrayList<>();
@@ -40,7 +39,7 @@ public class ProfessorDAO {
     public void writeAllProfessorInfo(List<Professor> professors){
 
         try {
-            FileWriter fileWriter = new FileWriter(PROFESSOR_FILE_PATH,false);
+            FileWriter fileWriter = new FileWriter(FilePath.PROFESSOR_FILE_PATH,false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             for(Professor professor : professors){
                 bufferedWriter.write(professor.toString());
@@ -92,7 +91,7 @@ public class ProfessorDAO {
     public boolean insertProfessorInfo(Professor newProfessor){
         String newProfessorInfo = newProfessor.toString();
         try {
-            FileWriter fileWriter = new FileWriter(PROFESSOR_FILE_PATH,true);
+            FileWriter fileWriter = new FileWriter(FilePath.PROFESSOR_FILE_PATH,true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(newProfessorInfo);
             bufferedWriter.close();
@@ -149,7 +148,7 @@ public class ProfessorDAO {
                 bufReader.close();
                 fileReader.close();
             }
-            FileWriter fileWriter = new FileWriter(PROFESSOR_NUM_FILE_PATH,false);
+            FileWriter fileWriter = new FileWriter(FilePath.PROFESSOR_NUM_FILE_PATH,false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(Integer.toString(nextProfessorNum + 1));
             bufferedWriter.close();
@@ -185,7 +184,7 @@ public class ProfessorDAO {
         return selectedProfessor;
     }
 
-    public List<Professor> inquireProfessorsInfo(String targetProfessorName) {
+    public List<Professor> inquireProfessorsInfoByName(String targetProfessorName) {
         String currentProfessorName="";
         Professor selectedProfessor;
 

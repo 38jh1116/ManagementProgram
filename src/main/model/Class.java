@@ -1,10 +1,10 @@
 package main.model;
 
 public class Class {
-    public String classNum;
-    public String name;
-    public String professorId;
-    public String semester;
+    private String classNum;
+    private String name;
+    private String professorId;
+    private String semester;
 
     public Class(String classNum, String name, String professorId, String semester) {
         this.classNum = classNum;

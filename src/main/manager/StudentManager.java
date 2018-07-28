@@ -6,18 +6,18 @@ import main.model.Student;
 import java.util.List;
 
 public class StudentManager {
-    public StudentDAO studentDAO;
+    private StudentDAO studentDAO;
 
     public StudentManager(){
         studentDAO = new StudentDAO();
     }
 
-    public boolean dupleCheck(String studentRRN){
+    private boolean dupleCheck(String studentRRN){
         return studentDAO.checkDupleStudent(studentRRN);
     }
 
 
-    public boolean validationCheck(Student student){
+    private boolean validationCheck(Student student){
 
         boolean isValid = true;
         if("".equals(student.getName())
@@ -41,7 +41,7 @@ public class StudentManager {
     }
 
     public boolean saveStudentInfo(Student newStudent) {
-        if(!validationCheck(newStudent) || dupleCheck(newStudent.RRN)){
+        if(!validationCheck(newStudent) || dupleCheck(newStudent.getRRN())){
             return false;
         }
         newStudent.setStudentNum(makeNewStudentNum());
@@ -58,13 +58,13 @@ public class StudentManager {
     public boolean removeStudentInfo(String targetStudentNum) {
         return studentDAO.deleteStudentInfo(targetStudentNum);
     }
-    public Student inquireStudentInfo(String targetStudentNum) {
 
+    public Student inquireStudentInfo(String targetStudentNum) {
         return studentDAO.inquireStudentInfo(targetStudentNum);
     }
 
-    public List<Student> inquireStudentsInfo(String targetStudentName){
-        return studentDAO.inquireStudentsInfo(targetStudentName);
+    public List<Student> inquireStudentsInfoByName(String targetStudentName){
+        return studentDAO.inquireStudentsInfoByName(targetStudentName);
     }
 
     public List<Student> sortStudentsInfoByStudentNum() {

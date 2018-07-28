@@ -2,13 +2,13 @@ package main.model;
 
 public class Professor {
 
-    public String professorNum;
-    public String name;
-    public String RRN;
-    public String phoneNum;
-    public String email;
-    public String officeAddress;
-    public String officeNum;
+    private String professorNum;
+    private String name;
+    private String RRN;
+    private String phoneNum;
+    private String email;
+    private String officeAddress;
+    private String officeNum;
 
 
 

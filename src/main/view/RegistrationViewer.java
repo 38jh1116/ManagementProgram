@@ -32,7 +32,7 @@ public class RegistrationViewer extends MyPrinter {
 
     public Registration showModifyInfoCommand(Registration registration)
     {
-        print(" 변경할 정보를 입력하세요. \n\n");
+        print(" 변경할 정보를 입력하세요.(변경사항이 없을 경우 : Enter) \n\n");
 
         print(" 수강 학생 학번 : ");
         String studentNum = MyScanner.stringScanner();
