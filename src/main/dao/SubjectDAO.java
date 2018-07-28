@@ -60,7 +60,7 @@ public class SubjectDAO {
         return subject;
     }
     public boolean findSubject(String subjectNum){
-        String currentSubject = "";
+        Subject currentSubject;
         boolean isExist = false;
 
         if(!subjectInfo.exists()) return isExist;
@@ -71,8 +71,8 @@ public class SubjectDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentSubject = line.split("/")[0];
-                if (currentSubject.equals(subjectNum)) {
+                currentSubject = convertStringToSubject(line);
+                if (currentSubject.getSubjectNum().equals(subjectNum)) {
                     isExist = true;
                     break;
                 }
@@ -86,7 +86,7 @@ public class SubjectDAO {
     }
 
     public boolean checkDupleSubject(String subjectName) {
-        String currentSubectName = "";
+        Subject currentSubject;
         boolean isExist = false;
 
         if(!subjectInfo.exists()) return isExist;
@@ -97,8 +97,8 @@ public class SubjectDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentSubectName = line.split("/")[2];
-                if (currentSubectName.equals(subjectName)) {
+                currentSubject = convertStringToSubject(line);
+                if (currentSubject.getName().equals(subjectName)) {
                     isExist = true;
                     break;
                 }
@@ -179,7 +179,7 @@ public class SubjectDAO {
 
     public Subject inquireSubjectInfo(String subjectNum) {
         Subject selectedSubject = null;
-        String currentSubjectNum = "";
+        Subject currentSubject;
         try {
             if(!subjectInfo.exists()) return selectedSubject;
 
@@ -189,9 +189,9 @@ public class SubjectDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentSubjectNum = line.split("/")[0];
-                if (currentSubjectNum.equals(subjectNum)) {
-                    selectedSubject = convertStringToSubject(line);
+                currentSubject = convertStringToSubject(line);
+                if (currentSubject.getSubjectNum().equals(subjectNum)) {
+                    selectedSubject = currentSubject;
                     break;
                 }
             }
@@ -204,9 +204,7 @@ public class SubjectDAO {
     }
 
     public List<Subject> inquireSubjectsInfoByName(String targetSubjectName) {
-        String currentSubjectName="";
-        Subject foundSubject;
-
+        Subject currentSubject;
         List<Subject> selectedSubjectList = new ArrayList<>();
 
         try {
@@ -217,10 +215,9 @@ public class SubjectDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentSubjectName = line.split("/")[1];
-                if (currentSubjectName.equals(targetSubjectName)) {
-                    foundSubject = convertStringToSubject(line);
-                    selectedSubjectList.add(foundSubject);
+                currentSubject = convertStringToSubject(line);
+                if (currentSubject.getName().equals(targetSubjectName)) {
+                    selectedSubjectList.add(currentSubject);
                 }
             }
             bufReader.close();
@@ -254,6 +251,5 @@ public class SubjectDAO {
         Collections.sort(subjectList,nameComparator);
         return subjectList;
     }
-
 
 }

@@ -2,6 +2,8 @@ package main.manager;
 
 import main.dao.CourseDAO;
 import main.model.Course;
+import main.model.Professor;
+import main.model.Subject;
 
 import java.util.List;
 
@@ -9,37 +11,39 @@ public class CourseManager {
     private CourseDAO courseDAO;
 
     public CourseManager(){
+
         courseDAO = new CourseDAO();
     }
 
-    private boolean dupleCheck(Course course){
+    private boolean checkDuple(Course course){
         return courseDAO.checkDupleCourse(course);
     }
 
-
-    private boolean validationCheck(Course course){
+    private boolean checkValidation(Course course){
 
         boolean isValid = true;
-        if("".equals(course.getCourseName())
-                || "".equals(course.getSubjectNum())
+        if( "".equals(course.getSubject().getSubjectNum())
                 || "".equals(course.getClassNum())
-                || "".equals(course.getProfessorId())
+                || "".equals(course.getProfessor().getProfessorNum())
                 || "".equals(course.getSemester())
-                || "".equals(course.getTime())
-                || "".equals(course.getCredit())) {
+                || "".equals(course.getTime())) {
             isValid = false;
         }
-        if(course.getCourseName().contains("/")
-                || course.getSubjectNum().contains("/")
+        if(course.getSubject().getSubjectNum().contains("/")
                 || course.getClassNum().contains("/")
-                || course.getProfessorId().contains("/")
+                || course.getProfessor().getProfessorNum().contains("/")
                 || course.getSemester().contains("/")
-                || course.getTime().contains("/")
-                || course.getCredit().contains("/")){
+                || course.getTime().contains("/")){
             isValid = false;
         }
 
         return isValid;
+    }
+    private boolean checkProfessor(Professor professor) {
+        return courseDAO.findProfessor(professor.getProfessorNum());
+    }
+    private boolean checkSubject(Subject subject) {
+        return courseDAO.findSubject(subject.getSubjectNum());
     }
 
     private String makeNewCourseNum() {
@@ -47,15 +51,20 @@ public class CourseManager {
     }
 
     public boolean saveCourseInfo(Course newCourse) {
-        if(!validationCheck(newCourse) || dupleCheck(newCourse)){
+        if(!checkValidation(newCourse) || checkDuple(newCourse)){
+            return false;
+        }
+        if(!checkSubject(newCourse.getSubject())  || !checkProfessor(newCourse.getProfessor()) ) {
             return false;
         }
         newCourse.setCourseNum(makeNewCourseNum());
         return courseDAO.insertCourseInfo(newCourse);
     }
+
+
     public boolean modifyCourseInfo(Course targetCourse) {
 
-        if(!validationCheck(targetCourse)){
+        if(!checkValidation(targetCourse)){
             return false;
         }
         return courseDAO.updateCourseInfo(targetCourse);
@@ -73,8 +82,8 @@ public class CourseManager {
         return courseDAO.inquireCoursesInfoBySubjectNum(subjectNum);
 
     }
-    public List<Course> inquireCoursesInfoByCourseName(String targetSubjectName){
-        return courseDAO.inquireCoursesInfoByCourseName(targetSubjectName);
+    public List<Course> inquireCoursesInfoBySubjectName(String targetSubjectName){
+        return courseDAO.inquireCoursesInfoBySubjectName(targetSubjectName);
     }
     public List<Course> inquireCoursesInfoByProfessorName(String targetCourseProfessorName){
         return courseDAO.inquireCoursesInfoByProfessorName(targetCourseProfessorName);
@@ -84,13 +93,13 @@ public class CourseManager {
         return courseDAO.sortCoursesInfoBySubjectNum();
     }
 
-    public List<Course> sortCoursesInfoByCourseName() {
-        return courseDAO.sortCoursesInfoByCourseName();
+    public List<Course> sortCoursesInfoBySubjectName() {
+        return courseDAO.sortCoursesInfoBySubjectName();
     }
 
     public List<Course> getAllCoursesInfo() {
+
         return courseDAO.getAllCoursesInfo();
     }
-
 
 }

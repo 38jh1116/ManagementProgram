@@ -83,7 +83,7 @@ public class ProfessorManager {
         return professorDAO.getAllProfessorInfo();
     }
 
-    public String getProfessorId(String targetProfessorName) {
+    public String getProfessorNum(String targetProfessorName) {
         return professorDAO.getProfessorId(targetProfessorName);
     }
 }

@@ -62,7 +62,7 @@ public class StudentDAO {
         return student;
     }
     public boolean findStudent(String studentNum){
-        String currentStudentNum = "";
+        Student currentStudent;
         boolean isExist = false;
 
         if(!studentInfo.exists()) return isExist;
@@ -73,8 +73,8 @@ public class StudentDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentStudentNum = line.split("/")[0];
-                if (currentStudentNum.equals(studentNum)) {
+                currentStudent = convertStringToStudent(line);
+                if (currentStudent.getStudentNum().equals(studentNum)) {
                     isExist = true;
                     break;
                 }
@@ -88,7 +88,7 @@ public class StudentDAO {
     }
 
     public boolean checkDupleStudent(String studentRRN) {
-        String currentStudentRRN = "";
+        Student currentStudent;
         boolean isExist = false;
 
         if(!studentInfo.exists()) return isExist;
@@ -99,8 +99,8 @@ public class StudentDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentStudentRRN = line.split("/")[2];
-                if (currentStudentRRN.equals(studentRRN)) {
+                currentStudent = convertStringToStudent(line);
+                if (currentStudent.getRRN().equals(studentRRN)) {
                     isExist = true;
                     break;
                 }
@@ -183,7 +183,7 @@ public class StudentDAO {
 
     public Student inquireStudentInfo(String studentNum) {
         Student selectedStudent = null;
-        String currentStudentNum = "";
+        Student currentStudent;
         try {
             if(!studentInfo.exists()) return selectedStudent;
 
@@ -193,9 +193,9 @@ public class StudentDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentStudentNum = line.split("/")[0];
-                if (currentStudentNum.equals(studentNum)) {
-                    selectedStudent = convertStringToStudent(line);
+                currentStudent = convertStringToStudent(line);
+                if (currentStudent.getStudentNum().equals(studentNum)) {
+                    selectedStudent = currentStudent;
                     break;
                 }
             }
@@ -208,9 +208,7 @@ public class StudentDAO {
     }
 
     public List<Student> inquireStudentsInfoByName(String targetStudentName) {
-        String currentStudentName="";
-        Student selectedStudent;
-
+        Student currentStudent;
         List<Student> selectedStudentList = new ArrayList<>();
 
         try {
@@ -221,10 +219,9 @@ public class StudentDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentStudentName = line.split("/")[1];
-                if (currentStudentName.equals(targetStudentName)) {
-                    selectedStudent = convertStringToStudent(line);
-                    selectedStudentList.add(selectedStudent);
+                currentStudent = convertStringToStudent(line);
+                if (currentStudent.getName().equals(targetStudentName)) {
+                    selectedStudentList.add(currentStudent);
                 }
             }
             bufReader.close();

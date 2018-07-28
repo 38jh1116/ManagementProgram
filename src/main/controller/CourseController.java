@@ -1,6 +1,7 @@
 package main.controller;
 
 import main.manager.CourseManager;
+import main.manager.SubjectManager;
 import main.model.Course;
 import main.view.CourseViewer;
 
@@ -9,10 +10,12 @@ import java.util.List;
 public class CourseController {
     private CourseViewer courseViewer;
     private CourseManager courseManager;
+    private SubjectManager subjectManager;
 
     public CourseController() {
         courseViewer = new CourseViewer();
         courseManager = new CourseManager();
+        subjectManager = new SubjectManager();
     }
 
     public void run() {
@@ -81,7 +84,6 @@ public class CourseController {
                     break;
             }
         }
-
     }
 
     private boolean displayAllCoursesInfo() {
@@ -119,7 +121,7 @@ public class CourseController {
 
     private void searchByCourseName() {
         String courseName = courseViewer.showCourseNameCommand();
-        List<Course> targetCourses = courseManager.inquireCoursesInfoByCourseName(courseName);
+        List<Course> targetCourses = courseManager.inquireCoursesInfoBySubjectName(courseName);
 
         if (targetCourses.size() > 0) {
             courseViewer.showSuccessInquireMessage();
@@ -135,7 +137,7 @@ public class CourseController {
     }
 
     private void sortByCourseName() {
-        List<Course> sortedListByCourseName = courseManager.sortCoursesInfoByCourseName();
+        List<Course> sortedListByCourseName = courseManager.sortCoursesInfoBySubjectName();
         courseViewer.showCoursesInfo(sortedListByCourseName);
     }
 
