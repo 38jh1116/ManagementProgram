@@ -1,6 +1,6 @@
 package main;
 
-public class Message extends MyPrinter{
+public class Message{
 
     public static String INPUT_ERROR = "<< Error >> Incorrect input !";
     public static String NOT_EXIST_ERROR = "<< Error >> It doesn't exist !";

@@ -54,7 +54,7 @@ public class ProfessorController {
     }
     private void inquireProfessorInfo() {
 
-        displayAllProfessorsInfo();
+        if(displayAllProfessorsInfo()) return;
         boolean isBack = false;
         while(!isBack){
             String inquireMenu = professorViewer.showInquireMenu();
@@ -82,7 +82,7 @@ public class ProfessorController {
     }
 
     private void modifyProfessorInfo() {
-        displayAllProfessorsInfo();
+        if(displayAllProfessorsInfo()) return;
         String professorNum = professorViewer.showProfessorNumCommand();
         Professor targetProfessor = professorManager.inquireProfessorInfo(professorNum);
 
@@ -101,7 +101,7 @@ public class ProfessorController {
 
     }
     private void removeProfessorInfo() {
-        displayAllProfessorsInfo();
+        if(displayAllProfessorsInfo()) return;
         String professorNum = professorViewer.showProfessorNumCommand();
 
         if(professorManager.removeProfessorInfo(professorNum)) {
@@ -111,13 +111,16 @@ public class ProfessorController {
         }
     }
 
-    private void displayAllProfessorsInfo(){
+    private boolean displayAllProfessorsInfo(){
+        boolean isEmpty = false;
+
         List<Professor> professorList = professorManager.getAllProfessorsInfo();
         if(professorList.size() <= 0){
             professorViewer.showNoDataMessage();
-            return;
+            isEmpty = true;
         }
-        professorViewer.showProfessorsInfo(professorList);
+        else {professorViewer.showProfessorsInfo(professorList);}
+        return isEmpty;
     }
 
     private void searchByProfessorNumber() {
@@ -133,7 +136,7 @@ public class ProfessorController {
     }
     private void searchByProfessorName() {
         String professorName = professorViewer.showProfessorNameCommand();
-        List<Professor> targetProfessors = professorManager.inquireProfessorsInfo(professorName);
+        List<Professor> targetProfessors = professorManager.inquireProfessorsInfoByName(professorName);
 
         if(targetProfessors.size() > 0){
             professorViewer.showSuccessInquireMessage();

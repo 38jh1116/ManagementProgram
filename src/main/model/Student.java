@@ -1,11 +1,11 @@
 package main.model;
 
 public class Student {
-    public String studentNum;
-    public String name;
-    public String RRN;
-    public String phoneNum;
-    public String email;
+    private String studentNum;
+    private String name;
+    private String RRN;
+    private String phoneNum;
+    private String email;
 
 
     public Student(){

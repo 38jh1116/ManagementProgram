@@ -54,7 +54,7 @@ public class StudentController {
     }
     private void inquireStudentInfo() {
 
-        displayAllStudentsInfo();
+        if(displayAllStudentsInfo()) return;
         boolean isBack = false;
         while(!isBack){
             String inquireMenu = studentViewer.showInquireMenu();
@@ -81,7 +81,7 @@ public class StudentController {
 
     }
     private void modifyStudentInfo() {
-        displayAllStudentsInfo();
+        if(displayAllStudentsInfo()) return;
         String studentNum = studentViewer.showStudentNumCommand();
         Student targetStudent = studentManager.inquireStudentInfo(studentNum);
 
@@ -101,7 +101,7 @@ public class StudentController {
     }
 
     private void removeStudentInfo() {
-        displayAllStudentsInfo();
+       if(displayAllStudentsInfo()) return;
 
         String studentNum = studentViewer.showStudentNumCommand();
         if (studentManager.removeStudentInfo(studentNum)) {
@@ -111,13 +111,15 @@ public class StudentController {
         }
     }
 
-    private void displayAllStudentsInfo(){
+    private boolean displayAllStudentsInfo(){
+        boolean isEmpty = false;
         List<Student> studentList = studentManager.getAllStudentsInfo();
         if(studentList.size() <= 0){
             studentViewer.showNoDataMessage();
-            return;
+            isEmpty = true;
         }
-        studentViewer.showStudentsInfo(studentList);
+        else{studentViewer.showStudentsInfo(studentList);}
+        return isEmpty;
     }
 
     private void searchByStudentNumber() {
@@ -134,7 +136,7 @@ public class StudentController {
 
     private void searchByStudentName() {
         String studentName = studentViewer.showStudentNameCommand();
-        List<Student> targetStudents = studentManager.inquireStudentsInfo(studentName);
+        List<Student> targetStudents = studentManager.inquireStudentsInfoByName(studentName);
 
         if(targetStudents.size() > 0){
             studentViewer.showSuccessInquireMessage();

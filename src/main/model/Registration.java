@@ -3,9 +3,9 @@ package main.model;
 public class Registration {
 
 
-    String registrationNum;
-    String studentNum;
-    String courseNum;
+    private String registrationNum;
+    private String studentNum;
+    private String courseNum;
 
     public String getRegistrationNum(){
         return registrationNum;

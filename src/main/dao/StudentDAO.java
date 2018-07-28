@@ -1,5 +1,6 @@
 package main.dao;
 
+import main.FilePath;
 import main.model.Student;
 
 import java.io.*;
@@ -9,11 +10,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class StudentDAO {
-    private static final String STUDENT_FILE_PATH = "/Users/limjeonghyun/Desktop/ManageProgram/info_files/studentInfo";
-    private static final String STUDENT_NUM_FILE_PATH = "/Users/limjeonghyun/Desktop/ManageProgram/info_files/studentNumber";
 
-    File studentInfo = new File(STUDENT_FILE_PATH);
-    File studentNumberInfo = new File(STUDENT_NUM_FILE_PATH);
+
+    File studentInfo = new File(FilePath.STUDENT_FILE_PATH);
+    File studentNumberInfo = new File(FilePath.STUDENT_NUM_FILE_PATH);
 
     public List<Student> getAllStudentsInfo(){
         List<Student> studentList = new ArrayList<>();
@@ -40,7 +40,7 @@ public class StudentDAO {
     public void writeAllStudentInfo(List<Student> students){
 
         try {
-            FileWriter fileWriter = new FileWriter(STUDENT_FILE_PATH,false);
+            FileWriter fileWriter = new FileWriter(FilePath.STUDENT_FILE_PATH,false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             for(Student student : students){
                 bufferedWriter.write(student.toString());
@@ -61,8 +61,8 @@ public class StudentDAO {
         student.setEmail(studentInfo[4]);
         return student;
     }
-    public boolean findStuent(String studentNum){
-        String fountStudentNum = "";
+    public boolean findStudent(String studentNum){
+        String currentStudentNum = "";
         boolean isExist = false;
 
         if(!studentInfo.exists()) return isExist;
@@ -73,8 +73,8 @@ public class StudentDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                fountStudentNum = line.split("/")[0];
-                if (fountStudentNum.equals(studentNum)) {
+                currentStudentNum = line.split("/")[0];
+                if (currentStudentNum.equals(studentNum)) {
                     isExist = true;
                     break;
                 }
@@ -88,7 +88,7 @@ public class StudentDAO {
     }
 
     public boolean checkDupleStudent(String studentRRN) {
-        String fountStudentRRN = "";
+        String currentStudentRRN = "";
         boolean isExist = false;
 
         if(!studentInfo.exists()) return isExist;
@@ -99,8 +99,8 @@ public class StudentDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                fountStudentRRN = line.split("/")[2];
-                if (fountStudentRRN.equals(studentRRN)) {
+                currentStudentRRN = line.split("/")[2];
+                if (currentStudentRRN.equals(studentRRN)) {
                     isExist = true;
                     break;
                 }
@@ -115,7 +115,7 @@ public class StudentDAO {
     public boolean insertStudentInfo(Student newStudent){
         String newStudentInfo = newStudent.toString();
         try {
-            FileWriter fileWriter = new FileWriter(STUDENT_FILE_PATH,true);
+            FileWriter fileWriter = new FileWriter(FilePath.STUDENT_FILE_PATH,true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(newStudentInfo);
             bufferedWriter.close();
@@ -170,7 +170,7 @@ public class StudentDAO {
                 bufReader.close();
                 fileReader.close();
             }
-            FileWriter fileWriter = new FileWriter(STUDENT_NUM_FILE_PATH,false);
+            FileWriter fileWriter = new FileWriter(FilePath.STUDENT_NUM_FILE_PATH,false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(Integer.toString(nextStudentNum + 1));
             bufferedWriter.close();
@@ -207,9 +207,9 @@ public class StudentDAO {
         return selectedStudent;
     }
 
-    public List<Student> inquireStudentsInfo(String targetStudentName) {
+    public List<Student> inquireStudentsInfoByName(String targetStudentName) {
         String currentStudentName="";
-        Student foundStudent;
+        Student selectedStudent;
 
         List<Student> selectedStudentList = new ArrayList<>();
 
@@ -223,8 +223,8 @@ public class StudentDAO {
             while ((line = bufReader.readLine()) != null) {
                 currentStudentName = line.split("/")[1];
                 if (currentStudentName.equals(targetStudentName)) {
-                    foundStudent = convertStringToStudent(line);
-                    selectedStudentList.add(foundStudent);
+                    selectedStudent = convertStringToStudent(line);
+                    selectedStudentList.add(selectedStudent);
                 }
             }
             bufReader.close();

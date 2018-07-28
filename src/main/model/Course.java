@@ -1,14 +1,14 @@
 package main.model;
 
 public class Course {
-    public String courseNum;
-    public String subjectNum;
-    public String courseName;
-    public String classNum;
-    public String professorId;
-    public String semester;
-    public String time;
-    public String credit;
+    private String courseNum;
+    private String subjectNum;
+    private String courseName;
+    private String classNum;
+    private String professorId;
+    private String semester;
+    private String time;
+    private String credit;
 
 
     public Course() {

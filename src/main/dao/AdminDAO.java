@@ -1,5 +1,7 @@
 package main.dao;
 
+import main.FilePath;
+
 import java.io.*;
 
 public class AdminDAO {
@@ -11,7 +13,7 @@ public class AdminDAO {
         String user_id = "", user_pw = "";
 
         try {
-            File adminInfo = new File("/Users/limjeonghyun/Desktop/ManageProgram/info_files/adminInfo");
+            File adminInfo = new File(FilePath.ADMIN_FILE_PATH);
             if(!adminInfo.exists()) return user_pw;
 
             FileReader fileReader = new FileReader(adminInfo);

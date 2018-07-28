@@ -56,7 +56,7 @@ public class RegistrationController {
 
     private void inquireRegistrationInfo() {
 
-        displayAllRegistrationsInfo();
+        if(displayAllRegistrationsInfo()) return;
         boolean isBack = false;
         while(!isBack){
             String inquireMenu = registrationViewer.showInquireMenu();
@@ -84,7 +84,7 @@ public class RegistrationController {
     }
     private void modifyRegistrationInfo() {
 
-        displayAllRegistrationsInfo();
+        if(displayAllRegistrationsInfo()) return;
         String registrationNum = registrationViewer.showRegistrationNumCommand();
         Registration targetRegistration = registrationManager.inquireRegistrationInfo(registrationNum);
 
@@ -103,7 +103,7 @@ public class RegistrationController {
 
     }
     private void removeRegistrationInfo() {
-        displayAllRegistrationsInfo();
+        if(displayAllRegistrationsInfo()) return;
         String registrationNum = registrationViewer.showRegistrationNumCommand();
         if(registrationManager.removeRegistrationInfo(registrationNum)) {
             registrationViewer.showRemoveSuccessMessage();
@@ -112,13 +112,15 @@ public class RegistrationController {
         }
     }
 
-    private void displayAllRegistrationsInfo(){
+    private boolean displayAllRegistrationsInfo(){
+        boolean isEmpty = false;
         List<Registration> registrationList = registrationManager.getAllRegistrationsInfo();
         if(registrationList.size() <= 0){
             registrationViewer.showNoDataMessage();
-            return;
+            isEmpty = true;
         }
-        registrationViewer.showRegistrationsInfo(registrationList);
+        else {registrationViewer.showRegistrationsInfo(registrationList);}
+        return isEmpty;
 
     }
     private void searchByStudentNum() {

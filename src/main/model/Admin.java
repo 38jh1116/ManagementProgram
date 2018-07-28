@@ -1,7 +1,7 @@
 package main.model;
 
 public class Admin {
-    String id,password;
+    private String id,password;
 
     public Admin(){
     }

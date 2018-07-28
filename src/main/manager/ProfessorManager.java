@@ -6,18 +6,18 @@ import main.model.Professor;
 import java.util.List;
 
 public class ProfessorManager {
-    public ProfessorDAO professorDAO;
+    private ProfessorDAO professorDAO;
 
     public ProfessorManager(){
         professorDAO = new ProfessorDAO();
     }
 
-    public boolean dupleCheck(String professorRRN){
+    private boolean dupleCheck(String professorRRN){
         return professorDAO.checkDupleProfessork(professorRRN);
     }
 
 
-    public boolean validationCheck(Professor professor){
+    private boolean validationCheck(Professor professor){
 
         boolean isValid = true;
         if("".equals(professor.getName())
@@ -45,7 +45,7 @@ public class ProfessorManager {
     }
 
     public boolean saveProfessorInfo(Professor newProfessor) {
-        if(!validationCheck(newProfessor) || dupleCheck(newProfessor.RRN)){
+        if(!validationCheck(newProfessor) || dupleCheck(newProfessor.getRRN())){
             return false;
         }
         newProfessor.setProfessorNum(makeNewProfessorNum());
@@ -67,8 +67,8 @@ public class ProfessorManager {
         return professorDAO.inquireProfessorInfo(targetProfessorNum);
     }
 
-    public List<Professor> inquireProfessorsInfo(String targetProfessorNum){
-        return professorDAO.inquireProfessorsInfo(targetProfessorNum);
+    public List<Professor> inquireProfessorsInfoByName(String targetProfessorName){
+        return professorDAO.inquireProfessorsInfoByName(targetProfessorName);
     }
 
     public List<Professor> sortProfessorsInfoByProfessorNum() {

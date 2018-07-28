@@ -55,7 +55,7 @@ public class CourseController {
 
     private void inquireCourseInfo() {
 
-        displayAllCoursesInfo();
+       if(displayAllCoursesInfo()) return;
         boolean isBack = false;
         while (!isBack) {
             String inquireMenu = courseViewer.showInquireMenu();
@@ -84,18 +84,20 @@ public class CourseController {
 
     }
 
-    private void displayAllCoursesInfo() {
+    private boolean displayAllCoursesInfo() {
+        boolean isEmpty = false;
         List<Course> courseList = courseManager.getAllCoursesInfo();
         if (courseList.size() <= 0) {
             courseViewer.showNoDataMessage();
-            return;
+            isEmpty = true;
         }
-        courseViewer.showCoursesInfo(courseList);
+        else{ courseViewer.showCoursesInfo(courseList);}
+        return isEmpty;
     }
 
     private void searchBySubjectNum() {
         String subjectNum = courseViewer.showSubjectNumCommand();
-        List<Course> targetCourses = courseManager.inquireCoursesBySubjectNum(subjectNum);
+        List<Course> targetCourses = courseManager.inquireCoursesInfoBySubjectNum(subjectNum);
         if (targetCourses.size() > 0) {
             courseViewer.showSuccessInquireMessage();
             courseViewer.showCoursesInfo(targetCourses);
@@ -106,7 +108,7 @@ public class CourseController {
 
     private void searchByProfessorName() {
         String professorName = courseViewer.showProfessorNameCommand();
-        List<Course> targetCourses = courseManager.inquireCoursesByProfessorName(professorName);
+        List<Course> targetCourses = courseManager.inquireCoursesInfoByProfessorName(professorName);
         if (targetCourses.size() > 0) {
             courseViewer.showSuccessInquireMessage();
             courseViewer.showCoursesInfo(targetCourses);
@@ -117,7 +119,7 @@ public class CourseController {
 
     private void searchByCourseName() {
         String courseName = courseViewer.showCourseNameCommand();
-        List<Course> targetCourses = courseManager.inquireCoursesByCourseName(courseName);
+        List<Course> targetCourses = courseManager.inquireCoursesInfoByCourseName(courseName);
 
         if (targetCourses.size() > 0) {
             courseViewer.showSuccessInquireMessage();
@@ -128,18 +130,18 @@ public class CourseController {
     }
 
     private void sortBySubjectNum() {
-        List<Course> sortedListBySubjectNum = courseManager.sortCoursesBySubjectNum();
+        List<Course> sortedListBySubjectNum = courseManager.sortCoursesInfoBySubjectNum();
         courseViewer.showCoursesInfo(sortedListBySubjectNum);
     }
 
     private void sortByCourseName() {
-        List<Course> sortedListByCourseName = courseManager.sortCoursesByCourseName();
+        List<Course> sortedListByCourseName = courseManager.sortCoursesInfoByCourseName();
         courseViewer.showCoursesInfo(sortedListByCourseName);
     }
 
     private void modifyCourseInfo() {
 
-        displayAllCoursesInfo();
+        if(displayAllCoursesInfo()) return;
         String courseNum = courseViewer.showCourseNumCommand();
         Course targetCourse = courseManager.inquireCourseInfo(courseNum);
 
@@ -158,7 +160,7 @@ public class CourseController {
     }
 
     private void removeCourseInfo() {
-        displayAllCoursesInfo();
+        if(displayAllCoursesInfo()) return;
         String courseNum = courseViewer.showCourseNumCommand();
         if (courseManager.removeCourseInfo(courseNum)){
             courseViewer.showRemoveSuccessMessage();

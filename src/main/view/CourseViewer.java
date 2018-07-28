@@ -10,7 +10,7 @@ import java.util.List;
 public class CourseViewer extends MyPrinter {
 
     public String showMenu() {
-        print("\n########### [1] 강의 관리 ############\n");
+        print("\n########### [4] 강의 관리 ############\n");
         print("\n 1. 강의 정보 입력 \n");
         print(" 2. 강의 정보 조회\n");
         print(" 3. 강의 정보 수정 \n");
@@ -42,7 +42,7 @@ public class CourseViewer extends MyPrinter {
 
     public Course showModifyInfoCommand(Course course)
     {
-        print(" 변경할 정보를 입력하세요. \n\n");
+        print(" 변경할 정보를 입력하세요.(변경사항이 없을 경우 : Enter)\n\n");
 
         print(" 학수 번호 : ");
         String subjectNum = MyScanner.stringScanner();

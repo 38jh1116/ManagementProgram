@@ -22,7 +22,7 @@ public class RegistrationManager {
         return registrationDAO.checkDupleRegistration(registration);
     }
     public boolean existCheck(Registration registration){
-        return (studentDAO.findStuent(registration.getStudentNum()) && courseDAO.findCourse(registration.getCourseNum()));
+        return (studentDAO.findStudent(registration.getStudentNum()) && courseDAO.findCourse(registration.getCourseNum()));
     }
 
     public boolean validationCheck(Registration registration){

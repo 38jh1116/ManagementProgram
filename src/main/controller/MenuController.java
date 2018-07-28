@@ -3,13 +3,13 @@ package main.controller;
 import main.view.MenuViewer;
 
 public class MenuController {
-    MenuViewer menuViewer;
-    StudentController studentController;
-    ProfessorController professorController;
-    CourseController courseController;
-    RegistrationController registrationController;
-    GradeController gradeController;
-
+    private MenuViewer menuViewer;
+    private StudentController studentController;
+    private ProfessorController professorController;
+    private CourseController courseController;
+    private RegistrationController registrationController;
+    private GradeController gradeController;
+    private SubjectController subjectController;
 
     public MenuController(){
         menuViewer = new MenuViewer();
@@ -32,16 +32,19 @@ public class MenuController {
                     professorController = new ProfessorController();
                     professorController.run();
                     break;
-
                 case "3":
+                    subjectController = new SubjectController();
+                    subjectController.run();
+                    break;
+                case "4":
                     courseController = new CourseController();
                     courseController.run();
                     break;
                     /*
-                case "4":
+                case "5":
                     registrationController = new RegistrationController();
                     registrationController.run();
-                case "5":
+                case "6":
                     gradeController = new GradeController();
                     gradeController.run();
                     break;
