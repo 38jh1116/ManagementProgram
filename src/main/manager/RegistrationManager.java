@@ -1,70 +1,74 @@
 package main.manager;
 
+import main.Message;
 import main.dao.CourseDAO;
 import main.dao.RegistrationDAO;
-import main.dao.StudentDAO;
+import main.model.Course;
 import main.model.Registration;
+import main.model.Student;
 
 import java.util.List;
 
 public class RegistrationManager {
-    public RegistrationDAO registrationDAO;
-    public StudentDAO studentDAO;
-    public CourseDAO courseDAO;
+    private RegistrationDAO registrationDAO;
+    private CourseDAO courseDAO;
 
     public RegistrationManager(){
         registrationDAO = new RegistrationDAO();
-        studentDAO = new StudentDAO();
         courseDAO = new CourseDAO();
     }
 
-    public boolean dupleCheck(Registration registration){
-        return registrationDAO.checkDupleRegistration(registration);
+    private String checkPossibility(Registration registration){
+        return registrationDAO.checkPossibility(registration);
     }
-    public boolean existCheck(Registration registration){
-        return (studentDAO.findStudent(registration.getStudentNum()) && courseDAO.findCourse(registration.getCourseNum()));
+    private boolean checkStudent(Student student){
+        return registrationDAO.checkStudent(student.getStudentNum());
+    }
+    private boolean checkCourse(Course course){
+        return registrationDAO.checkCourse(course.getCourseNum());
+    }
+    private String makeNewRegistrationNum() {
+        return registrationDAO.getNextRegistrationNum();
     }
 
-    public boolean validationCheck(Registration registration){
+    private boolean validationCheck(Registration registration){
 
         boolean isValid = true;
-        if("".equals(registration.getStudentNum()) || "".equals(registration.getCourseNum())){
+        if("".equals(registration.getStudent().getStudentNum()) || "".equals(registration.getCourse().getCourseNum())){
             isValid = false;
         }
-        if(registration.getStudentNum().contains("/") || registration.getCourseNum().contains("/")){
+        if(registration.getStudent().getStudentNum().contains("/") || registration.getCourse().getCourseNum().contains("/")){
             isValid = false;
         }
 
         return isValid;
     }
 
-    private String makeNewRegistrationNum() {
-        return registrationDAO.getNextRegistrationNum();
-    }
-
     public boolean saveRegistrationInfo(Registration newRegistration) {
-        if(!validationCheck(newRegistration) || dupleCheck(newRegistration) || !existCheck(newRegistration)){
-            return false;
+        if(validationCheck(newRegistration)
+                && checkStudent(newRegistration.getStudent())
+                && checkCourse(newRegistration.getCourse())){
+            String takeCase = checkPossibility(newRegistration);
+            if(takeCase.equals(Message.IMPOSSIBLE)) return false;
+            else{
+                newRegistration.setRegistrationNum(makeNewRegistrationNum());
+                newRegistration.setGrade(Message.NOT_YET);
+                newRegistration.setIsRetake(takeCase);
+            }
         }
-        newRegistration.setRegistrationNum(makeNewRegistrationNum());
+        else return false;
         return registrationDAO.insertRegistrationInfo(newRegistration);
     }
     public boolean modifyRegistrationInfo(Registration targetRegistration) {
 
-        if(!validationCheck(targetRegistration)){
-            return false;
-        }
-        return registrationDAO.updateRegistrationInfo(targetRegistration);
+        return validationCheck(targetRegistration)
+                && registrationDAO.updateRegistrationInfo(targetRegistration);
     }
 
     public boolean removeRegistrationInfo(String targetRegistrationNum) {
         return registrationDAO.deleteRegistrationInfo(targetRegistrationNum);
     }
 
-    public Registration inquireRegistrationInfo(String targetRegistrationNum) {
-
-        return registrationDAO.inquireRegistrationInfo(targetRegistrationNum);
-    }
 
     public List<Registration> inquireRegistrationsByStudentNum(String targetRegistrationStudentNum){
         return registrationDAO.inquireRegistrationsByStudentNum(targetRegistrationStudentNum);
@@ -74,17 +78,8 @@ public class RegistrationManager {
         return registrationDAO.inquireRegistrationsByCourseNum(targetRegistrationCourseNum);
     }
 
-    public List<Registration> sortRegistrationsByStudentNum() {
-        return registrationDAO.sortRegistrationsInfoByStudent();
+
+    public List<Course> getAllCourseInfo() {
+        return courseDAO.getAllCoursesInfo();
     }
-
-    public List<Registration> sortRegistrationsByCourseNum() {
-        return registrationDAO.sortRegistrationsInfoByCourse();
-    }
-
-    public List<Registration> getAllRegistrationsInfo() {
-        return registrationDAO.getAllRegistrationsInfo();
-    }
-
-
 }

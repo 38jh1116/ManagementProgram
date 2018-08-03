@@ -64,7 +64,7 @@ public class ProfessorDAO {
     }
 
     public boolean checkDupleProfessork(String professorRRN) {
-        String foundProfessorRRN = "";
+        Professor currentProfessor;
         boolean isExist = false;
 
         if(!professorInfo.exists()) return isExist;
@@ -75,8 +75,8 @@ public class ProfessorDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                foundProfessorRRN = line.split("/")[2];
-                if (foundProfessorRRN.equals(professorRRN)) {
+                currentProfessor = convertStringToProfessor(line);
+                if (currentProfessor.getRRN().equals(professorRRN)) {
                     isExist = true;
                     break;
                 }
@@ -161,7 +161,7 @@ public class ProfessorDAO {
 
     public Professor inquireProfessorInfo(String professorNum) {
         Professor selectedProfessor = null;
-        String curProfessorNum = "";
+        Professor currentProfessor;
         try {
             if(!professorInfo.exists()) return selectedProfessor;
             FileReader fileReader = new FileReader(professorInfo);
@@ -170,8 +170,8 @@ public class ProfessorDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                curProfessorNum = line.split("/")[0];
-                if (curProfessorNum.equals(professorNum)) {
+                currentProfessor = convertStringToProfessor(line);
+                if (currentProfessor.getProfessorNum().equals(professorNum)) {
                     selectedProfessor= convertStringToProfessor(line);
                     break;
                 }
@@ -185,8 +185,7 @@ public class ProfessorDAO {
     }
 
     public List<Professor> inquireProfessorsInfoByName(String targetProfessorName) {
-        String currentProfessorName="";
-        Professor selectedProfessor;
+        Professor currentProfessor;
 
         List<Professor> selectedProfessorList = new ArrayList<>();
 
@@ -198,10 +197,9 @@ public class ProfessorDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentProfessorName = line.split("/")[1];
-                if (currentProfessorName.equals(targetProfessorName)) {
-                    selectedProfessor = convertStringToProfessor(line);
-                    selectedProfessorList.add(selectedProfessor);
+                currentProfessor = convertStringToProfessor(line);
+                if (currentProfessor.getName().equals(targetProfessorName)) {
+                    selectedProfessorList.add(currentProfessor);
                 }
             }
             bufReader.close();
@@ -238,7 +236,7 @@ public class ProfessorDAO {
 
 
     public String getProfessorId(String targetProfessorName) {
-        String currentProfessorName = "";
+        Professor currentProfessor;
         String professorId = "";
 
         if(!professorInfo.exists()) return professorId;
@@ -249,9 +247,9 @@ public class ProfessorDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentProfessorName = line.split("/")[1];
-                if (currentProfessorName.equals(targetProfessorName)) {
-                    professorId = line.split("/")[0];
+                currentProfessor = convertStringToProfessor(line);
+                if (currentProfessor.getName().equals(targetProfessorName)) {
+                    professorId = currentProfessor.getProfessorNum();
                     break;
                 }
             }
@@ -261,5 +259,31 @@ public class ProfessorDAO {
             e.printStackTrace();
         }
         return professorId;
+    }
+
+    public boolean findProfessor(String professorNum) {
+        Professor currentProfessor;
+        boolean isExist = false;
+
+        if(!professorInfo.exists()) return isExist;
+        try {
+            FileReader fileReader = new FileReader(professorInfo);
+            BufferedReader bufReader = new BufferedReader(fileReader);
+
+            String line = "";
+
+            while ((line = bufReader.readLine()) != null) {
+                currentProfessor = convertStringToProfessor(line);
+                if (currentProfessor.getProfessorNum().equals(professorNum)) {
+                    isExist = true;
+                    break;
+                }
+            }
+            bufReader.close();
+            fileReader.close();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return isExist;
     }
 }

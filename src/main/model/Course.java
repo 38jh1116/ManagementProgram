@@ -2,18 +2,39 @@ package main.model;
 
 public class Course {
     private String courseNum;
-    private String subjectNum;
-    private String courseName;
+    private Subject subject;
     private String classNum;
-    private String professorId;
+    private Professor professor;
     private String semester;
     private String time;
-    private String credit;
-
 
     public Course() {
-
+        subject = new Subject();
+        professor = new Professor();
     }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+    public void setSubjectNum(String subjectNum){
+        this.subject.setSubjectNum(subjectNum);
+    }
+
+
+    public Professor getProfessor() {
+        return professor;
+    }
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
+    public void setProfessorNum(String professorNum){
+        this.professor.setProfessorNum(professorNum);
+    }
+
 
     public String getCourseNum() {
         return courseNum;
@@ -23,21 +44,7 @@ public class Course {
         this.courseNum = courseNum;
     }
 
-    public String getSubjectNum() {
-        return subjectNum;
-    }
 
-    public void setSubjectNum(String subjectNum) {
-        this.subjectNum = subjectNum;
-    }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
 
     public String getClassNum() {
         return classNum;
@@ -47,13 +54,6 @@ public class Course {
         this.classNum = classNum;
     }
 
-    public String getProfessorId() {
-        return professorId;
-    }
-
-    public void setProfessorId(String professorId) {
-        this.professorId = professorId;
-    }
 
     public String getSemester() {
         return semester;
@@ -71,26 +71,13 @@ public class Course {
         this.time = time;
     }
 
-    public String getCredit() {
-        return credit;
-    }
-
-    public void setCredit(String credit) {
-        this.credit = credit;
-    }
     @Override
     public String toString() {
         return courseNum + '/'
-                + subjectNum + '/'
-                + courseName + '/'
+                + subject.getSubjectNum() + '/'
                 + classNum + '/'
-                + professorId + '/'
+                + professor.getProfessorNum() + '/'
                 + semester + '/'
-                + time + '/'
-                + credit +
-                '\n';
+                + time + '\n';
     }
-
-
-
 }

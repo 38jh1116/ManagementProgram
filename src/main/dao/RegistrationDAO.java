@@ -1,20 +1,27 @@
 package main.dao;
 
 import main.FilePath;
+import main.Message;
+import main.model.Course;
 import main.model.Registration;
+import main.model.Student;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class RegistrationDAO {
 
+    private StudentDAO studentDAO;
+    private CourseDAO courseDAO;
 
     File registrationInfo = new File(FilePath.REGISTRATION_FILE_PATH);
     File registrationNumberInfo = new File(FilePath.REGISTRATION_NUM_FILE_PATH);
 
+
+    public RegistrationDAO(){
+        studentDAO = new StudentDAO();
+        courseDAO = new CourseDAO();
+    }
     public List<Registration> getAllRegistrationsInfo() {
         List<Registration> registrationList = new ArrayList<>();
 
@@ -27,6 +34,7 @@ public class RegistrationDAO {
 
             while ((line = bufReader.readLine()) != null) {
                 Registration registration = convertStringToRegistration(line);
+                registration = addStudentAndCourseInfo(registration);
                 registrationList.add(registration);
             }
             bufReader.close();
@@ -56,41 +64,31 @@ public class RegistrationDAO {
         Registration registration = new Registration();
         registration.setRegistrationNum(registrationInfo[0]);
         registration.setStudentNum(registrationInfo[1]);
-        registration.setRegistrationNum(registrationInfo[2]);
+        registration.setCourseNum(registrationInfo[2]);
+        registration.setGrade(registrationInfo[3]);
+        registration.setIsRetake(registrationInfo[4]);
         return registration;
     }
 
-    public boolean checkDupleRegistration(Registration targetRegistrationNum) {
-        String targetRegistrationCourseNum = targetRegistrationNum.getCourseNum();
-        String targetRegistrationStudentNum = targetRegistrationNum.getStudentNum();
+    public String checkPossibility(Registration targetRegistration) {
+        String targetRegistrationCourseNum = targetRegistration.getCourse().getCourseNum();
+        String targetRegistrationSubjectNum = courseDAO.inquireCourseInfo(targetRegistrationCourseNum).getSubject().getSubjectNum();
+        String targetRegistrationStudentNum = targetRegistration.getStudent().getStudentNum();
 
-        String currentRegistrationCourseNum = "";
-        String currentRegistrationStudentNum = "";
+        List<Registration> targetStudentRegistrationList = inquireRegistrationsByStudentNum(targetRegistrationStudentNum);
+        String takeCase = Message.POSSIBLE_AND_NEW;
 
-        boolean isExist = false;
-
-        if (!registrationInfo.exists()) return isExist;
-        try {
-            FileReader fileReader = new FileReader(registrationInfo);
-            BufferedReader bufReader = new BufferedReader(fileReader);
-
-            String line = "";
-
-            while ((line = bufReader.readLine()) != null) {
-                currentRegistrationStudentNum = line.split("/")[1];
-                currentRegistrationCourseNum = line.split("/")[2];
-                if (currentRegistrationStudentNum.equals(targetRegistrationStudentNum)
-                        && currentRegistrationCourseNum.equals(targetRegistrationCourseNum)) {
-                    isExist = true;
+        if (!registrationInfo.exists()) return takeCase;
+        for(Registration registration :targetStudentRegistrationList){
+            if(registration.getCourse().getSubject().getSubjectNum().equals(targetRegistrationSubjectNum)){
+                takeCase = Message.POSSIBLE_AND_NEW;
+                if(registration.getGrade().compareTo("B0") >= 0) {
+                    takeCase =  Message.IMPOSSIBLE;
                     break;
                 }
             }
-            bufReader.close();
-            fileReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return isExist;
+        return takeCase;
     }
 
     public boolean insertRegistrationInfo(Registration newRegistration) {
@@ -111,8 +109,8 @@ public class RegistrationDAO {
         List<Registration> registrationList = getAllRegistrationsInfo();
         for (Registration registration : registrationList) {
             if (registration.getRegistrationNum().equals(targetRegistration.getRegistrationNum())) {
-                registration.setStudentNum(targetRegistration.getStudentNum());
-                registration.setCourseNum(targetRegistration.getCourseNum());
+                registration.setStudentNum(targetRegistration.getStudent().getStudentNum());
+                registration.setCourseNum(targetRegistration.getCourse().getCourseNum());
                 isUpdated = true;
                 break;
             }
@@ -162,7 +160,7 @@ public class RegistrationDAO {
 
     public Registration inquireRegistrationInfo(String registrationNum) {
         Registration selectedRegistration = null;
-        String curRegistrationNum = "";
+        Registration currentRegistration;
         try {
             if (!registrationInfo.exists()) return selectedRegistration;
             FileReader fileReader = new FileReader(registrationInfo);
@@ -171,9 +169,9 @@ public class RegistrationDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                curRegistrationNum = line.split("/")[0];
-                if (curRegistrationNum.equals(registrationNum)) {
-                    selectedRegistration = convertStringToRegistration(line);
+                currentRegistration = convertStringToRegistration(line);
+                if (currentRegistration.getRegistrationNum().equals(registrationNum)) {
+                    selectedRegistration = currentRegistration;
                     break;
                 }
             }
@@ -186,8 +184,7 @@ public class RegistrationDAO {
     }
 
     public List<Registration> inquireRegistrationsByStudentNum(String targetRegistrationStudentNum) {
-        String currentRegistrationStudentNum = "";
-        Registration selectedRegistration;
+        Registration currentRegistration;
 
         List<Registration> selectedRegistrationList = new ArrayList<>();
 
@@ -199,10 +196,10 @@ public class RegistrationDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentRegistrationStudentNum = line.split("/")[1];
-                if (currentRegistrationStudentNum.equals(targetRegistrationStudentNum)) {
-                    selectedRegistration = convertStringToRegistration(line);
-                    selectedRegistrationList.add(selectedRegistration);
+                currentRegistration = convertStringToRegistration(line);
+                if (currentRegistration.getStudent().getStudentNum().equals(targetRegistrationStudentNum)) {
+                    currentRegistration = addStudentAndCourseInfo(currentRegistration);
+                    selectedRegistrationList.add(currentRegistration);
                 }
             }
             bufReader.close();
@@ -214,9 +211,7 @@ public class RegistrationDAO {
     }
 
     public List<Registration> inquireRegistrationsByCourseNum(String targetRegistrationCourseNum) {
-        String currentRegistrationCourseNum = "";
-        Registration selectedRegistration;
-
+        Registration currentRegistration;
         List<Registration> selectedRegistrationList = new ArrayList<>();
 
         try {
@@ -227,10 +222,10 @@ public class RegistrationDAO {
             String line = "";
 
             while ((line = bufReader.readLine()) != null) {
-                currentRegistrationCourseNum = line.split("/")[2];
-                if (currentRegistrationCourseNum.equals(targetRegistrationCourseNum)) {
-                    selectedRegistration = convertStringToRegistration(line);
-                    selectedRegistrationList.add(selectedRegistration);
+                currentRegistration = convertStringToRegistration(line);
+                if (currentRegistration.getCourse().getCourseNum().equals(targetRegistrationCourseNum)) {
+                    currentRegistration = addStudentAndCourseInfo(currentRegistration);
+                    selectedRegistrationList.add(currentRegistration);
                 }
             }
             bufReader.close();
@@ -244,13 +239,13 @@ public class RegistrationDAO {
     private Comparator<Registration> numComparator = new Comparator<Registration>() {
         @Override
         public int compare(Registration r1, Registration r2) {
-            return r1.getCourseNum().compareTo(r2.getCourseNum());
+            return r1.getCourse().getCourseNum().compareTo(r2.getCourse().getCourseNum());
         }
     };
     private Comparator<Registration> studentNumComparator = new Comparator<Registration>() {
         @Override
         public int compare(Registration r1, Registration r2) {
-            return r1.getStudentNum().compareTo(r2.getStudentNum());
+            return r1.getStudent().getStudentNum().compareTo(r2.getStudent().getStudentNum());
         }
     };
 
@@ -264,6 +259,23 @@ public class RegistrationDAO {
         List<Registration> registrationList = getAllRegistrationsInfo();
         Collections.sort(registrationList, studentNumComparator);
         return registrationList;
+    }
+
+    public boolean checkStudent(String studentNum) {
+        return studentDAO.findStudent(studentNum);
+    }
+
+    public boolean checkCourse(String courseNum) {
+        return courseDAO.findCourse(courseNum);
+    }
+
+    private Registration addStudentAndCourseInfo(Registration registration){
+        Student student = studentDAO.inquireStudentInfo(registration.getStudent().getStudentNum());
+        Course course = courseDAO.inquireCourseInfo(registration.getCourse().getCourseNum());
+
+        registration.setCourse(course);
+        registration.setStudent(student);
+        return registration;
     }
 }
 
