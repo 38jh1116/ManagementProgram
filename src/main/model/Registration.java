@@ -2,39 +2,68 @@ package main.model;
 
 public class Registration {
 
-
+    private Student student;
+    private Course course;
+    private String grade;
+    private String isRetake;
     private String registrationNum;
-    private String studentNum;
-    private String courseNum;
 
-    public String getRegistrationNum(){
+    public Registration(){
+        student = new Student();
+        course = new Course();
+    }
+    public String getRegistrationNum() {
         return registrationNum;
     }
 
     public void setRegistrationNum(String registrationNum) {
         this.registrationNum = registrationNum;
     }
-    public String getStudentNum() {
-        return studentNum;
+
+    public String getGrade() {
+        return grade;
     }
 
-    public void setStudentNum(String studentNum) {
-        this.studentNum = studentNum;
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
-    public String getCourseNum() {
-        return courseNum;
+    public String getIsRetake() {
+        return isRetake;
     }
 
-    public void setCourseNum(String courseNum) {
-        this.courseNum = courseNum;
+    public void setIsRetake(String isRetake) {
+        this.isRetake = isRetake;
     }
+
+    public Student getStudent() {
+        return student;
+    }
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+    public void setStudentNum(String studentNum){
+        this.student.setStudentNum(studentNum);
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+    public void setCourseNum(String courseNum){
+        this.course.setCourseNum(courseNum);
+    }
+
 
     @Override
     public String toString() {
-        return  registrationNum + '/'
-                + studentNum + '/'
-                + courseNum + '/'
+        return registrationNum + '/'
+                + student.getStudentNum() + '/'
+                + course.getCourseNum()+ '/'
+                + grade + '/'
+                + isRetake + '/'
                 + "\n";
     }
 }

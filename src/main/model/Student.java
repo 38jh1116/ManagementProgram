@@ -7,7 +7,6 @@ public class Student {
     private String phoneNum;
     private String email;
 
-
     public Student(){
 
     }
@@ -48,8 +47,6 @@ public class Student {
     public void setName(String name) {
         this.name = name;
     }
-
-
 
     @Override
     public String toString() {

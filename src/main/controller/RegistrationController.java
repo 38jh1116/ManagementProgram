@@ -46,7 +46,8 @@ public class RegistrationController {
     private void saveRegistrationInfo(){
 
         Registration newRegistration = registrationViewer.showRegistrationInfoInputCommand();
-
+        registrationViewer.showAllCourseInfo(registrationManager.getAllCourseInfo());
+        newRegistration.setCourseNum(registrationViewer.showCourseNumCommand());
         if(registrationManager.saveRegistrationInfo(newRegistration)){
             registrationViewer.showSaveSuccessMessage();
         }else{
@@ -56,7 +57,6 @@ public class RegistrationController {
 
     private void inquireRegistrationInfo() {
 
-        if(displayAllRegistrationsInfo()) return;
         boolean isBack = false;
         while(!isBack){
             String inquireMenu = registrationViewer.showInquireMenu();
@@ -66,12 +66,6 @@ public class RegistrationController {
                     break;
                 case "2" :
                     searchByCourseNum();
-                    break;
-                case "3" :
-                    sortByStudentNum();
-                    break;
-                case "4" :
-                    sortByCourseNum();
                     break;
                 case "0":
                     isBack = true;
@@ -84,52 +78,63 @@ public class RegistrationController {
     }
     private void modifyRegistrationInfo() {
 
-        if(displayAllRegistrationsInfo()) return;
-        String registrationNum = registrationViewer.showRegistrationNumCommand();
-        Registration targetRegistration = registrationManager.inquireRegistrationInfo(registrationNum);
+        String studentNum = registrationViewer.showStudentNumCommand();
+        List<Registration> targetRegistrationList = registrationManager.inquireRegistrationsByStudentNum(studentNum);
+        Registration targetRegistration;
 
-        if(targetRegistration != null){
-            registrationViewer.showRegistrationInfo(targetRegistration);
+        if(targetRegistrationList.size() > 0) {
+            registrationViewer.showRegistrationsInfo(targetRegistrationList);
+            int targetIndex = registrationViewer.showSelectNumCommand();
+            if(targetIndex < 1 || targetIndex > targetRegistrationList.size()) {
+                registrationViewer.showInputValueError();
+                return;
+            }
+            targetRegistration = targetRegistrationList.get(targetIndex);
+            registrationViewer.showAllCourseInfo(registrationManager.getAllCourseInfo());
             targetRegistration = registrationViewer.showModifyInfoCommand(targetRegistration);
+
             if(registrationManager.modifyRegistrationInfo(targetRegistration)){
                 registrationViewer.showModifySuccessMessage();
             }
             else{
                 registrationViewer.showModifyFailMessage();
             }
-        }else{
-            registrationViewer.showNotExistError();
+        }else {
+            registrationViewer.showNoDataMessage();
         }
 
     }
     private void removeRegistrationInfo() {
-        if(displayAllRegistrationsInfo()) return;
-        String registrationNum = registrationViewer.showRegistrationNumCommand();
-        if(registrationManager.removeRegistrationInfo(registrationNum)) {
-            registrationViewer.showRemoveSuccessMessage();
-        } else {
-            registrationViewer.showRemoveFailMessage();
-        }
-    }
+        String studentNum = registrationViewer.showStudentNumCommand();
+        List<Registration> targetRegistrationList = registrationManager.inquireRegistrationsByStudentNum(studentNum);
+        Registration targetRegistration;
 
-    private boolean displayAllRegistrationsInfo(){
-        boolean isEmpty = false;
-        List<Registration> registrationList = registrationManager.getAllRegistrationsInfo();
-        if(registrationList.size() <= 0){
+        if(targetRegistrationList.size() > 0) {
+            registrationViewer.showRegistrationsInfo(targetRegistrationList);
+            int targetIndex = registrationViewer.showSelectNumCommand();
+            if(targetIndex < 1 || targetIndex > targetRegistrationList.size()) {
+                registrationViewer.showInputValueError();
+                return;
+            }
+            targetRegistration = targetRegistrationList.get(targetIndex);
+            if(registrationManager.removeRegistrationInfo(targetRegistration.getRegistrationNum())){
+                registrationViewer.showRemoveSuccessMessage();
+            }
+            else{
+                registrationViewer.showRemoveFailMessage();
+            }
+        }else {
             registrationViewer.showNoDataMessage();
-            isEmpty = true;
         }
-        else {registrationViewer.showRegistrationsInfo(registrationList);}
-        return isEmpty;
 
     }
+
     private void searchByStudentNum() {
         String studentNum = registrationViewer.showStudentNumCommand();
 
         List<Registration> targetRegistrations = registrationManager.inquireRegistrationsByStudentNum(studentNum);
 
         if(targetRegistrations.size() > 0){
-            registrationViewer.showSuccessInquireMessage();
             registrationViewer.showRegistrationsInfo(targetRegistrations);
         }
         else{
@@ -142,22 +147,11 @@ public class RegistrationController {
         List<Registration> targetRegistrations = registrationManager.inquireRegistrationsByCourseNum(courseNum);
 
         if(targetRegistrations.size() > 0){
-            registrationViewer.showSuccessInquireMessage();
             registrationViewer.showRegistrationsInfo(targetRegistrations);
         }
         else{
             registrationViewer.showNotExistError();
         }
     }
-
-    private void sortByStudentNum() {
-        List<Registration> sortedListByStudentNum = registrationManager.sortRegistrationsByStudentNum();
-        registrationViewer.showRegistrationsInfo(sortedListByStudentNum);
-    }
-    private void sortByCourseNum() {
-        List<Registration> sortedListByCourseNum = registrationManager.sortRegistrationsByCourseNum();
-        registrationViewer.showRegistrationsInfo(sortedListByCourseNum);
-    }
-
 
 }

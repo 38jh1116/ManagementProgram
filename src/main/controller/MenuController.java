@@ -40,10 +40,10 @@ public class MenuController {
                     courseController = new CourseController();
                     courseController.run();
                     break;
-                    /*
                 case "5":
                     registrationController = new RegistrationController();
                     registrationController.run();
+                    /*
                 case "6":
                     gradeController = new GradeController();
                     gradeController.run();

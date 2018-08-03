@@ -149,7 +149,7 @@ public class CourseViewer extends MyPrinter {
 
     public void showCoursesInfo(List<Course> targetCourses) {
         print("\n########################### 조회된 강의 정보 ##########################\n\n");
-        print("[강의번호]\t\t[학수번호]\t  [강의명]\t\t\t [분반] [담당교수]\t\t[담당교수직번]\t[강의학기]\t  [강의시간]\t\t[학점]\n");
+        print("[강의번호]\t\t[과목번호]\t  [강의명]\t\t\t [분반] [담당교수]\t\t[담당교수직번]\t[강의학기]\t  [강의시간]\t\t[학점]\n");
         for(Course course : targetCourses){
             printf("%-12s",course.getCourseNum());
             printf("%-10s",course.getSubject().getSubjectNum());
