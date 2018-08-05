@@ -82,7 +82,7 @@ public class RegistrationDAO {
         for(Registration registration :targetStudentRegistrationList){
             if(registration.getCourse().getSubject().getSubjectNum().equals(targetRegistrationSubjectNum)){
                 takeCase = Message.POSSIBLE_AND_NEW;
-                if(registration.getGrade().compareTo("B0") >= 0) {
+                if(registration.getGrade().compareTo("C+") < 0) {
                     takeCase =  Message.IMPOSSIBLE;
                     break;
                 }
@@ -109,8 +109,8 @@ public class RegistrationDAO {
         List<Registration> registrationList = getAllRegistrationsInfo();
         for (Registration registration : registrationList) {
             if (registration.getRegistrationNum().equals(targetRegistration.getRegistrationNum())) {
-                registration.setStudentNum(targetRegistration.getStudent().getStudentNum());
                 registration.setCourseNum(targetRegistration.getCourse().getCourseNum());
+                registration.setGrade(targetRegistration.getGrade());
                 isUpdated = true;
                 break;
             }
@@ -276,6 +276,17 @@ public class RegistrationDAO {
         registration.setCourse(course);
         registration.setStudent(student);
         return registration;
+    }
+
+    public boolean saveGradeInfo(List<Registration> registrationList) {
+        boolean isSaved = true;
+        for(Registration targetRegistration : registrationList){
+            if(!updateRegistrationInfo(targetRegistration)){
+                isSaved = false;
+                break;
+            }
+        }
+        return isSaved;
     }
 }
 

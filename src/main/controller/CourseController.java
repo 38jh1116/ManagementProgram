@@ -65,6 +65,7 @@ public class CourseController {
             switch (inquireMenu) {
                 case "1":
                     searchBySubjectNum();
+                    break;
                 case "2":
                     searchByCourseName();
                     break;

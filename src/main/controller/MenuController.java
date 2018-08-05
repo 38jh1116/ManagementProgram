@@ -43,12 +43,12 @@ public class MenuController {
                 case "5":
                     registrationController = new RegistrationController();
                     registrationController.run();
-                    /*
+
                 case "6":
                     gradeController = new GradeController();
                     gradeController.run();
                     break;
-                    */
+
                 default:
                     menuViewer.showInputError();
                     break;

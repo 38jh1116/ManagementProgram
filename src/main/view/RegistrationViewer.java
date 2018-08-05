@@ -12,7 +12,7 @@ import java.util.List;
 public class RegistrationViewer extends MyPrinter {
 
     public String showMenu() {
-        print("\n########### [4] 수강 관리 ############\n");
+        print("\n########### [5] 수강 관리 ############\n");
         print("\n 1. 수강 정보 입력 \n");
         print(" 2. 수강 정보 조회\n");
         print(" 3. 수강 정보 수정 \n");

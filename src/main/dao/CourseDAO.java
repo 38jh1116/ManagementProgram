@@ -259,36 +259,11 @@ public class CourseDAO {
 
     public List<Course> inquireCoursesInfoByProfessorName(String targetProfessorName) {
 
-        List<Course> selectedCourseList = new ArrayList<>();
-        Course currentCourse;
-
         ProfessorManager professorManager  = new ProfessorManager();
         String targetProfessorNum = professorManager.getProfessorNum(targetProfessorName);
-
-        if("".equals(targetProfessorNum)) return selectedCourseList;
-
-        try {
-            if(!courseInfo.exists()) return selectedCourseList;
-            FileReader fileReader = new FileReader(courseInfo);
-            BufferedReader bufReader = new BufferedReader(fileReader);
-
-            String line = "";
-
-            while ((line = bufReader.readLine()) != null) {
-                currentCourse = convertStringToCourse(line);
-                if (currentCourse.getProfessor().getProfessorNum().equals(targetProfessorNum)) {
-                    currentCourse = addSubjectAndProfessorInfo(currentCourse);
-                    selectedCourseList.add(currentCourse);
-                }
-            }
-            bufReader.close();
-            fileReader.close();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-        return selectedCourseList;
-
+        return inquireCoursesInfoByProfessorNum(targetProfessorNum);
     }
+
     private Comparator<Course> numComparator = new Comparator<Course>(){
         @Override
         public int compare(Course c1, Course c2) {
@@ -355,6 +330,35 @@ public class CourseDAO {
         course.setSubject(subject);
         course.setProfessor(professor);
         return course;
+    }
+
+    public List<Course> inquireCoursesInfoByProfessorNum(String targetProfessorNum) {
+
+        List<Course> selectedCourseList = new ArrayList<>();
+        Course currentCourse;
+
+        if("".equals(targetProfessorNum)) return selectedCourseList;
+        if(!courseInfo.exists()) return selectedCourseList;
+
+        try {
+            FileReader fileReader = new FileReader(courseInfo);
+            BufferedReader bufReader = new BufferedReader(fileReader);
+
+            String line = "";
+
+            while ((line = bufReader.readLine()) != null) {
+                currentCourse = convertStringToCourse(line);
+                if (currentCourse.getProfessor().getProfessorNum().equals(targetProfessorNum)) {
+                    currentCourse = addSubjectAndProfessorInfo(currentCourse);
+                    selectedCourseList.add(currentCourse);
+                }
+            }
+            bufReader.close();
+            fileReader.close();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return selectedCourseList;
     }
 }
 
