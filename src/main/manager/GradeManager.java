@@ -2,20 +2,21 @@ package main.manager;
 
 import main.dao.CourseDAO;
 import main.dao.RegistrationDAO;
+import main.dao.StudentDAO;
 import main.model.Course;
 import main.model.Registration;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GradeManager {
-    RegistrationDAO registrationDAO;
-    CourseDAO courseDAO;
-    Map<String,Double> gradeMappingMap;
+    private RegistrationDAO registrationDAO;
+    private CourseDAO courseDAO;
+    private Map<String,Double> gradeMappingMap;
+    private StudentDAO studentDAO;
 
     public GradeManager(){
         registrationDAO = new RegistrationDAO();
+        studentDAO = new StudentDAO();
         courseDAO = new CourseDAO();
         gradeMappingMap = new HashMap<>();
         gradeMapInit();
@@ -69,10 +70,53 @@ public class GradeManager {
             }
             gradeSum += currentCredit * currentGrade;
         }
-        gradeAverage = gradeSum/totalCredit;
+        if(totalCredit != 0) gradeAverage = gradeSum/totalCredit;
         gradeInfo.put("totalCredit", Integer.toString(totalCredit));
-        gradeInfo.put("averageGrade", Double.toString(gradeAverage));
+        gradeInfo.put("averageGrade", (String.format("%.2f",gradeAverage)));
         return gradeInfo;
     }
 
+    private static Map<String, String> sortByValues(Map<String, String> targetMap ) {
+
+        List<Map.Entry<String, String>> list = new LinkedList<Map.Entry<String, String>>(targetMap.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<String, String>>() {
+            public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+        Map<String, String> sortedMap = new LinkedHashMap<String, String>();
+        for (Map.Entry<String, String> currentEntry : list)
+        {
+            sortedMap.put(currentEntry.getKey(),currentEntry.getValue());
+        }
+
+        return sortedMap;
+    }
+
+    public Map<String,String> inquireRegistrationInfoBySchoolYear(String targetYear) {
+        targetYear = convertStudentNumToSchoolYear(targetYear);
+        Map<String, List<Registration>> registrationsListByStudent = new TreeMap<>();
+        registrationsListByStudent = registrationDAO.inquireRegistrationBySchoolYear(targetYear);
+
+        Map<String, String> studentGradeList = new TreeMap<>();
+
+        for (Map.Entry<String, List<Registration>> currentEntry : registrationsListByStudent.entrySet()) {
+            String currentStudentNum =  currentEntry.getKey();
+            List<Registration> currentStudentRegistrationList = currentEntry.getValue();
+
+            Map<String,String> calcResult = new TreeMap<>();
+            calcResult = calcTotalGrade(currentStudentRegistrationList);
+
+            studentGradeList.put(currentStudentNum,calcResult.get("averageGrade"));
+        }
+        studentGradeList = sortByValues(studentGradeList);
+        return studentGradeList;
+
+    }
+
+    private String convertStudentNumToSchoolYear(String targetYear) {
+        int thisYearStartNum = Integer.parseInt(studentDAO.getNextStudentNum(false).substring(0,2));
+        return String.valueOf(thisYearStartNum - Integer.parseInt(targetYear) + 1);
+    }
 }

@@ -7,6 +7,11 @@ import main.model.Registration;
 import main.model.Student;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class RegistrationDAO {
@@ -287,6 +292,32 @@ public class RegistrationDAO {
             }
         }
         return isSaved;
+    }
+
+    public Map<String,List<Registration>> inquireRegistrationBySchoolYear(String targetYear) {
+        List<String> fileLineList = new ArrayList<>();
+        Path path = Paths.get(FilePath.REGISTRATION_FILE_PATH);
+        Charset cs = StandardCharsets.UTF_8;
+        Map<String,List<Registration>> targetYearRegistrationList  = new HashMap<>();
+
+        try {
+            fileLineList = Files.readAllLines(path,cs);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for(String currentLine : fileLineList){
+            Registration currentRegistration = convertStringToRegistration(currentLine);
+            String currentStudentNum = currentRegistration.getStudent().getStudentNum();
+            if(currentStudentNum.substring(0,2).equals(targetYear)){
+                currentRegistration = addStudentAndCourseInfo(currentRegistration);
+                if(targetYearRegistrationList.get(currentStudentNum) == null){
+                    List<Registration> registrationList = new ArrayList<>();
+                    targetYearRegistrationList.put(currentStudentNum,registrationList);
+                }
+                targetYearRegistrationList.get(currentStudentNum).add(currentRegistration);
+            }
+        }
+        return targetYearRegistrationList;
     }
 }
 

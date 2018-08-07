@@ -109,13 +109,15 @@ public class RegistrationViewer extends MyPrinter {
     }
 
     public void showRegistrationsInfo(List<Registration> targetRegistrations) {
-        print("\n############################################################### 조회된 수강 정보 ###################################################################\n\n");
-        print("[번호]  [수강학생]\t\t\t\t\t\t[과목번호]\t\t\t[과목명]\t\t\t\t[분반]\t담당교수]\t\t\t\t[강의학기]\t\t[강의시간]\t\t [학점] [성적] [재수강]\n");
+
+        print("\n############################################################### 조회된 수강 정보 ####################################################\n\n");
+        print("[번호]  [수강학생]\t\t\t\t\t\t[과목번호]\t\t\t[과목명]\t\t\t\t[분반]\t담당교수]\t\t\t\t[강의학기]\t\t[강의시간]\t\t [학점]\n");
         int index=1;
         for(Registration registration : targetRegistrations){
             Course currentCourse = registration.getCourse();
             Student currentStudent = registration.getStudent();
             printf("%-7s",index);
+
             printf("%-30s",currentStudent.getName()+"("+currentStudent.getStudentNum()+")");
             printf("%-15s",currentCourse.getCourseNum());
             printf("%-21s",currentCourse.getSubject().getName());
@@ -124,8 +126,6 @@ public class RegistrationViewer extends MyPrinter {
             printf("%-10s",currentCourse.getSemester());
             printf("%-17s",currentCourse.getTime());
             printf("%-5s",currentCourse.getSubject().getCredit());
-            printf("%-7s",registration.getGrade());
-            printf("%-5s",registration.getIsRetake());
             print("\n");
             index++;
         }

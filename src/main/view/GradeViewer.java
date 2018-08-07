@@ -132,4 +132,20 @@ public class GradeViewer extends MyPrinter{
         return MyScanner.stringScanner();
     }
 
+    public String showSchoolYearCommand() {
+        print("조회할 학년을 입력하세요 >> ");
+        return MyScanner.stringScanner();
+    }
+
+    public void showStudentGradeList(Map<String, String> gradeListMap) {
+        print("\n---------- 성적순 조회 -----------\n");
+        print("\n[학번]\t\t [성적]\n");
+        for (Map.Entry<String, String> currentEntry : gradeListMap.entrySet()) {
+           printf("%-13s",currentEntry.getKey());
+           printf("%-5s",currentEntry.getValue());
+           print("\n");
+        }
+        print("\n");
+
+    }
 }

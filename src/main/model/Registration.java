@@ -63,7 +63,7 @@ public class Registration {
                 + student.getStudentNum() + '/'
                 + course.getCourseNum()+ '/'
                 + grade + '/'
-                + isRetake + '/'
+                + isRetake
                 + "\n";
     }
 }
