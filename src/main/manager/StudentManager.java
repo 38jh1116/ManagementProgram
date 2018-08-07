@@ -37,7 +37,7 @@ public class StudentManager {
     }
 
     private String makeNewStudentNum() {
-        return studentDAO.getNextStudentNum();
+        return studentDAO.getNextStudentNum(true);
     }
 
     public boolean saveStudentInfo(Student newStudent) {

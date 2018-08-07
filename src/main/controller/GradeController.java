@@ -120,6 +120,14 @@ public class GradeController {
     }
 
     private void searchByGrade() {
-    }
+        String targetYear = gradeViewer.showSchoolYearCommand();
+        Map<String,String> gradeListMap =  gradeManager.inquireRegistrationInfoBySchoolYear(targetYear);
+        if(gradeListMap.size() == 0){
+            gradeViewer.showNoDataMessage();
+        }
+        else{
+            gradeViewer.showStudentGradeList(gradeListMap);
+        }
 
+    }
 }

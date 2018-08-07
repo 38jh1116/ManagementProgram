@@ -156,32 +156,35 @@ public class StudentDAO {
         return isDeleted;
     }
 
-    public String getNextStudentNum() {
+    public String getNextStudentNum(boolean isIncrease) {
         int nextStudentNum = 18000001;
         try {
-            if(studentNumberInfo.exists()){
+            if (studentNumberInfo.exists()) {
                 FileReader fileReader = new FileReader(studentNumberInfo);
                 BufferedReader bufReader = new BufferedReader(fileReader);
 
                 String line = "";
-                if((line = bufReader.readLine()) != null){
+                if ((line = bufReader.readLine()) != null) {
                     nextStudentNum = Integer.parseInt(line);
                 }
                 bufReader.close();
                 fileReader.close();
             }
-            FileWriter fileWriter = new FileWriter(FilePath.STUDENT_NUM_FILE_PATH,false);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(Integer.toString(nextStudentNum + 1));
-            bufferedWriter.close();
-
-        }catch (IOException e) {
+            if (isIncrease) {
+                FileWriter fileWriter = new FileWriter(FilePath.STUDENT_NUM_FILE_PATH, false);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                bufferedWriter.write(Integer.toString(nextStudentNum + 1));
+                bufferedWriter.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
         return Integer.toString(nextStudentNum);
     }
-
-    public Student inquireStudentInfo(String studentNum) {
+    public Student inquireStudentInfo(String studentNum){
         Student selectedStudent = null;
         Student currentStudent;
         try {
